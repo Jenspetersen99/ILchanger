@@ -245,23 +245,33 @@ namespace ModMsil
             // Read our target assembly
             var assembly = Mono.Cecil.AssemblyDefinition.ReadAssembly(target);
 
+               // Carrier class so the helpers don't hang off <Module>
+            var gadgetType = new TypeDefinition("OrderProcessor.Runtime",
+                                                Utils.RandomString(6),
+                                                TypeAttributes.Class |
+                                                TypeAttributes.Public |
+                                                TypeAttributes.BeforeFieldInit,
+                                                assembly.MainModule.TypeSystem.Object);
+
             // We need to inject our method for holding strings
-            var stringsMethod = new MethodDefinition("Strings",
+            var stringsMethod = new MethodDefinition("Fetch" + Utils.RandomString(4),
                                                      MethodAttributes.HideBySig |
                                                      MethodAttributes.Static |
                                                      MethodAttributes.Public,
                                                      assembly.MainModule.TypeSystem.String
                                                      );
-            assembly.MainModule.Types.FirstOrDefault(x => x.Name == "<Module>").Methods.Add(stringsMethod);
+            gadgetType.Methods.Add(stringsMethod);
 
             // We need to inject our method for string decrypting
-            var decryptMethod = new MethodDefinition("Decrypt",
+            var decryptMethod = new MethodDefinition("Unpack" + Utils.RandomString(4),
                                                      MethodAttributes.HideBySig |
                                                      MethodAttributes.Static |
                                                      MethodAttributes.Public,
                                                      assembly.MainModule.TypeSystem.String
                                                      );
-            assembly.MainModule.Types.FirstOrDefault(x => x.Name == "<Module>").Methods.Add(decryptMethod);
+            gadgetType.Methods.Add(decryptMethod);
+
+            assembly.MainModule.Types.Add(gadgetType);
 
             // Create a namespace translation dict
             foreach (var module in assembly.Modules)
