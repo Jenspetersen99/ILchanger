@@ -1,0 +1,38 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# .NET user-specific files
+*.userprefs
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+
+# Test results
+TestResults/
+*.trx
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Environment / secrets
+.env
+appsettings.Development.json
